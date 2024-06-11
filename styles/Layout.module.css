@@ -1,0 +1,16 @@
+.container {
+    position: relative;
+    height: 350px;
+    width: 350px;
+    /* margin: 20px; マージンを追加して位置を調整 */
+    margin: auto;
+    margin-top: 5rem;
+    border: 2px solid #000; /* 視覚的な境界線を追加（オプション） */
+  }
+  
+  .mapWrapper {
+    height: 100%;
+    width: 100%;
+    position: absolute; /* コンテナ内での相対位置を設定 */
+  }
+  

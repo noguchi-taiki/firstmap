@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 
-export default function SearchBox({ map,firstCenter }) {
+export default function SearchBox({ map,firstCenter}) {
   const inputRef = useRef(null);
   const markers = useRef([]); // マーカーを使う際のref定義
 
@@ -43,7 +43,7 @@ export default function SearchBox({ map,firstCenter }) {
             return;
           }
 
-          // マーカーを作成して地図上に表示する。
+          // マーカーを作成して地図上に表示する。(Maekerメソッド) 
           const marker = new window.google.maps.Marker({
             map: map,
             position: place.geometry.location,

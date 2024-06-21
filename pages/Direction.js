@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export default function Direction({ map, origin, destination, setDistance }) {
+export default function Direction({ map, origin, destination, setDistance,mapOptions }) {
   const directionsRendererRef = useRef(null);
 
   useEffect(() => {
@@ -30,6 +30,7 @@ export default function Direction({ map, origin, destination, setDistance }) {
     return () => {
       if (directionsRendererRef.current) {
         directionsRendererRef.current.setMap(null); // コンポーネントがアンマウントされたときに経路を消す
+        mapOptions.zoom = 15;
       }
     };
 

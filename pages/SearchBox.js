@@ -6,10 +6,10 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
 
   useEffect(() => {
     if (map && inputRef.current) {
-      const autocompleteService = new window.google.maps.places.AutocompleteService();
+      const autocompleteService = new google.maps.places.AutocompleteService();
       const input = inputRef.current;
 
-      const searchBox = new window.google.maps.places.SearchBox(input, {
+      const searchBox = new google.maps.places.SearchBox(input, {
         types: ['cafe'], // カフェのみを検索する
         componentRestrictions: { country: 'jp' } // 日本国内に制限
       });
@@ -29,7 +29,7 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
         markers.current.forEach(marker => marker.setMap(null));
         // markers.current = [];
 
-        const bounds = new window.google.maps.LatLngBounds();
+        const bounds = new google.maps.LatLngBounds();
         places.forEach((place) => {
           if (!place.geometry || !place.geometry.location) {
             return;
@@ -44,7 +44,7 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
           }
 
           // マーカーを作成して地図上に表示する。(Maekerメソッド) 
-          const marker = new window.google.maps.Marker({
+          const marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location,
           });

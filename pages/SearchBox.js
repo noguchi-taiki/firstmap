@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 
-export default function SearchBox({ map,firstCenter}) {
+export default function SearchBox({ map,firstCenter,setDestination}) {
   const inputRef = useRef(null);
   const markers = useRef([]); // マーカーを使う際のref定義
 
@@ -27,7 +27,7 @@ export default function SearchBox({ map,firstCenter}) {
 
         //再検索の際にマーカーを消す
         markers.current.forEach(marker => marker.setMap(null));
-        markers.current = [];
+        // markers.current = [];
 
         const bounds = new window.google.maps.LatLngBounds();
         places.forEach((place) => {
@@ -56,6 +56,7 @@ export default function SearchBox({ map,firstCenter}) {
           } else {
             bounds.extend(place.geometry.location);
           }
+          setDestination(place.geometry.location); // 目的地を設定
         });
 
         map.fitBounds(bounds);
@@ -77,8 +78,8 @@ export default function SearchBox({ map,firstCenter}) {
           searchBox.set('predictions', []);
         }
       });
-    }
-  }, [map]);
+    };
+  }, [map,setDestination]);
 
-  return <input ref={inputRef} type="text" placeholder="カフェを検索" style={{ width: '300px', marginBottom: '10px' }} />;
+  return <input ref={inputRef} type="text" placeholder=" カフェを検索" style={{ width: "350px", marginBottom: "5px" ,marginRight: "25px"}} />;
 }

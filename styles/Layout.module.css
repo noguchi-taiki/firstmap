@@ -1,10 +1,10 @@
 .container {
     position: relative;
-    height: 350px;
-    width: 350px;
+    height: 500px;
+    width: 500px;
     /* margin: 20px; マージンを追加して位置を調整 */
     margin: auto;
-    margin-top: 5rem;
+    margin-top: 2.5rem;
     border: 2px solid #000; /* 視覚的な境界線を追加（オプション） */
   }
   

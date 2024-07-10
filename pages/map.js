@@ -4,7 +4,6 @@ import{ setCurrentLocationMarker } from "./currentLocation";
 import Direction from "./Direction";
 import Smoke from './smoke';
 
-
 export default function Map() {
   const hoge = {
     fuaga: "piyo",

@@ -1,16 +1,18 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect,useState } from 'react';
 
 export default function SearchBox({ map,firstCenter,setDestination}) {
   const inputRef = useRef(null);
-  const markers = useRef([]); // マーカーを使う際のref定義
+  const markers = useRef([]); //マーカーを使う際のref定義
+  const index = useRef([]);
+  const [markerPositions, setMarkerPositions] = useState([]); // マーカーの位置を保存するstate
 
   useEffect(() => {
     if (map && inputRef.current) {
       const autocompleteService = new google.maps.places.AutocompleteService();
       const input = inputRef.current;
-
+      
       const searchBox = new google.maps.places.SearchBox(input, {
-        types: ['cafe'], // カフェのみを検索する
+        types: ['cafe'], //カフェのみを検索する
         componentRestrictions: { country: 'jp' } // 日本国内に制限
       });
 
@@ -27,7 +29,7 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
 
         //再検索の際にマーカーを消す
         markers.current.forEach(marker => marker.setMap(null));
-        // markers.current = [];
+        markers.current = [];  
 
         const bounds = new google.maps.LatLngBounds();
         places.forEach((place) => {
@@ -50,6 +52,14 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
           });
 
           markers.current.push(marker);
+
+          const markerPosition = marker.getPosition();
+          if (markerPosition) {
+            setMarkerPositions(prevPositions => [
+              ...prevPositions,
+              { lat: markerPosition.lat(), lng: markerPosition.lng() }
+            ]);
+          }
 
           if (place.geometry.viewport) {
             bounds.union(place.geometry.viewport);
@@ -78,8 +88,17 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
           searchBox.set('predictions', []);
         }
       });
-    };
+    }
   }, [map,setDestination]);
-
-  return <input ref={inputRef} type="text" placeholder=" カフェを検索" style={{ width: "350px", marginBottom: "5px" ,marginRight: "25px"}} />;
+  return(<>
+    <input ref={inputRef} type="text" placeholder=" カフェを検索" style={{ width: "350px", marginBottom: "5px" ,marginRight: "25px"}} />
+    <div>
+        {markerPositions.map((pos, index) => (
+          <div key={index}>
+            Marker Position - Lat: {pos.lat}, Lng: {pos.lng}
+          </div>
+        ))}
+      </div>
+    </>
+  );
 }

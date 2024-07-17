@@ -2,30 +2,28 @@ import { useRef, useEffect, useState } from 'react';
 import SearchBox from './SearchBox';
 import{ setCurrentLocationMarker } from "./currentLocation";
 import Direction from "./Direction";
-import Smoke from './smoke';
+import styles from "../styles/Layout.module.css";
+import ReLocateButton from "./reLocateButton";
 
 export default function Map() {
-  const hoge = {
-    fuaga: "piyo",
-  };
   const ref = useRef(null);
-  const [map, setMap] = useState(null);
   const [firstCenter, setFirstCenter] = useState({ lat: 35.6809591, lng: 139.7673068 });
   const [destination, setDestination] = useState(null);
   const [distance,setDistance] = useState(null);
   const [showDirections,setShowDirections] = useState(false);
-
-  const mapOptions = {
-    zoom: 15,
-    mapTypeControl: false,
-    streetViewControl: false,
-    fullscreenControl: false,
-    keyboardShortcuts: false,
-    gestureHandling: "greedy",
-    clickableIcons: false,
-  };
+  const [map, setMap] = useState(null);
+  const [currentLocation,setCurrentLocation] = useState(null);
 
   const createMap = (center) => {
+    const mapOptions = {
+      zoom: 15,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
+      keyboardShortcuts: false,
+      gestureHandling: "greedy",
+      clickableIcons: false,
+    };
     const newMap = new google.maps.Map(ref.current,{
       ...mapOptions,
       center: center,
@@ -36,17 +34,18 @@ export default function Map() {
 
 
   useEffect(() => {
-
     if (ref.current && !map) {
       if (navigator.geolocation) {//Geolocation APIの確認
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            const currentLocation = {
+            const location = {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            setFirstCenter(currentLocation);
-            createMap(currentLocation);
+            console.log(location);
+            setFirstCenter(location);
+            createMap(location);
+            setCurrentLocation(location);
           },
           () => {
             // Geolocationの取得が失敗した場合
@@ -59,6 +58,7 @@ export default function Map() {
         createMap(firstCenter);
       }
     }
+    console.log(currentLocation);
   }, [ref, map, firstCenter]);
 
 useEffect(()=>{
@@ -72,17 +72,28 @@ const handleToggleDirections = () => {
   if(map && destination){
     setShowDirections(prevState => !prevState);
   }
-};
+}
 
+console.log(firstCenter);
+console.log(currentLocation);
   return (
     <div>
-      <SearchBox map={map}
+      <SearchBox
+      map={map}
       firstCenter={firstCenter}
       setDestination={setDestination}
+      createMap={createMap}
       />
-      <button onClick={handleToggleDirections}>
-        {showDirections?"隠す":"経路(車)"}
+      <button className={styles.directionButton} onClick={handleToggleDirections}>
+        {showDirections?"隠す":"検索"}
       </button>
+
+      <ReLocateButton
+      firstCenter={firstCenter}
+      currentLocation={currentLocation}
+      createMap={createMap}
+      />
+
       {showDirections && destination && (
         <Direction
           map={map}
@@ -92,10 +103,9 @@ const handleToggleDirections = () => {
           mapOptions={mapOptions}
         />
       )}
-      <Smoke/>
       
-      <div ref={ref} style={{ height: "470px", width: "500px" }} />
+      <div ref={ref} className={styles.map}/>
       <div>{showDirections&& distance ?`距離: ${distance}`:""}</div>
     </div>
-  );
+  )
 }

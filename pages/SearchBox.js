@@ -1,6 +1,8 @@
 import { useRef, useEffect,useState } from 'react';
+import styles from "../styles/Layout.module.css";
+import{ setCurrentLocationMarker } from "./currentLocation";
 
-export default function SearchBox({ map,firstCenter,setDestination}) {
+export default function SearchBox({ map,firstCenter,setDestination,currentLocation,createMap}) {
   const inputRef = useRef(null);
   const markers = useRef([]); //マーカーを使う際のref定義
   const index = useRef([]);
@@ -40,7 +42,11 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
           // カフェ以外の場所を選択した場合はクリア
           if (!place.types.includes('cafe')) {
             input.value = '';
-            map.setCenter(firstCenter);
+            if(currentLocation!=null){
+                createMap(currentLocation);
+            } else {
+                createMap(firstCenter);
+            }
             input.placeholder = 'こちらはカフェもしくは喫茶店ではありません。';
             return;
           }
@@ -54,12 +60,12 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
           markers.current.push(marker);
 
           const markerPosition = marker.getPosition();
-          if (markerPosition) {
-            setMarkerPositions(prevPositions => [
-              ...prevPositions,
-              { lat: markerPosition.lat(), lng: markerPosition.lng() }
-            ]);
-          }
+          // if (markerPosition) {
+          //   setMarkerPositions(prevPositions => [
+          //     ...prevPositions,
+          //     { lat: markerPosition.lat(), lng: markerPosition.lng() }
+          //   ]);
+          // }
 
           if (place.geometry.viewport) {
             bounds.union(place.geometry.viewport);
@@ -74,7 +80,7 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
 
       input.addEventListener('input', () => {
         const inputText = input.value;
-        input.placeholder = 'カフェを検索';
+        input.placeholder = 'ex:近くのカフェ';
         
         if (inputText) {
           const searchQuery = inputText.includes('カフェ') ? inputText : inputText + ' カフェ'; // キーワードに「カフェ」が含まれていなければ追加
@@ -91,14 +97,7 @@ export default function SearchBox({ map,firstCenter,setDestination}) {
     }
   }, [map,setDestination]);
   return(<>
-    <input ref={inputRef} type="text" placeholder=" カフェを検索" style={{ width: "350px", marginBottom: "5px" ,marginRight: "25px"}} />
-    <div>
-        {markerPositions.map((pos, index) => (
-          <div key={index}>
-            Marker Position - Lat: {pos.lat}, Lng: {pos.lng}
-          </div>
-        ))}
-      </div>
+    <input className={styles.searchBox} ref={inputRef} type="text" placeholder="ex:近くのカフェ"/>
     </>
   );
 }

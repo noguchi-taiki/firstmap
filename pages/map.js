@@ -13,17 +13,17 @@ export default function Map() {
   const [showDirections,setShowDirections] = useState(false);
   const [map, setMap] = useState(null);
   const [currentLocation,setCurrentLocation] = useState(null);
+  const mapOptions = {
+    zoom: 15,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: false,
+    keyboardShortcuts: false,
+    gestureHandling: "greedy",
+    clickableIcons: false,
+  };
 
   const createMap = (center) => {
-    const mapOptions = {
-      zoom: 15,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-      keyboardShortcuts: false,
-      gestureHandling: "greedy",
-      clickableIcons: false,
-    };
     const newMap = new google.maps.Map(ref.current,{
       ...mapOptions,
       center: center,
@@ -42,7 +42,6 @@ export default function Map() {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            console.log(location);
             setFirstCenter(location);
             createMap(location);
             setCurrentLocation(location);
@@ -58,7 +57,6 @@ export default function Map() {
         createMap(firstCenter);
       }
     }
-    console.log(currentLocation);
   }, [ref, map, firstCenter]);
 
 useEffect(()=>{
@@ -73,9 +71,6 @@ const handleToggleDirections = () => {
     setShowDirections(prevState => !prevState);
   }
 }
-
-console.log(firstCenter);
-console.log(currentLocation);
   return (
     <div>
       <SearchBox

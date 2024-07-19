@@ -1,15 +1,17 @@
 import { useRef, useEffect,useState } from 'react';
 import styles from "../styles/Layout.module.css";
-import{ setCurrentLocationMarker } from "./currentLocation";
 
 export default function SearchBox({ map,firstCenter,setDestination,currentLocation,createMap}) {
   const inputRef = useRef(null);
   const markers = useRef([]); //マーカーを使う際のref定義
   const index = useRef([]);
+  const [url, setUrl] = useState("");
+  const [places,setPlaces] = useState({});
+  const [toggle,setToggle] = useState(false);
   const [markerPositions, setMarkerPositions] = useState([]); // マーカーの位置を保存するstate
 
   useEffect(() => {
-    if (map && inputRef.current) {
+    if (map != null && inputRef.current) {
       const autocompleteService = new google.maps.places.AutocompleteService();
       const input = inputRef.current;
       
@@ -31,7 +33,13 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
 
         //再検索の際にマーカーを消す
         markers.current.forEach(marker => marker.setMap(null));
-        markers.current = [];  
+        markers.current = [];
+        setToggle(false);
+
+
+        // if(toggle && !places[0]){
+        //   setToggle(prevToggle => !prevToggle);
+        // }
 
         const bounds = new google.maps.LatLngBounds();
         places.forEach((place) => {
@@ -58,6 +66,19 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
           });
 
           markers.current.push(marker);
+
+          
+          if(places.length = 1){
+            google.maps.event.addListener(marker,"click",()=>{
+              setToggle(prevToggle => !prevToggle);
+              if(!toggle){
+                setPlaces(places[0]);
+                if (place.photos && place.photos.length > 0) {
+                  setUrl(place.photos[0].getUrl({ maxWidth: 400, maxHeight: 300 }));
+                }
+              }
+            })
+          }
 
           const markerPosition = marker.getPosition();
           // if (markerPosition) {
@@ -96,8 +117,27 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
       });
     }
   }, [map,setDestination]);
+
+
+  useEffect(()=>{
+    console.log(places);
+    console.log(places.name);
+    console.log(places.formatted_address);
+    console.log(places.formatted_phone_number);
+    if(url){
+      console.log(url);
+    }
+  },[places])
   return(<>
     <input className={styles.searchBox} ref={inputRef} type="text" placeholder="ex:近くのカフェ"/>
+    {toggle && (
+        <div className={styles.shopsInfo}>
+          <div>名前: {places.name}</div>
+          <div>住所: {places.formatted_address}</div>
+          <div>電話番号: {places.formatted_phone_number}</div>
+          {url && <img src={url} alt={places.name} />}
+        </div>
+      )}
     </>
   );
 }

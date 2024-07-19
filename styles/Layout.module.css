@@ -51,12 +51,30 @@
   border-color: blue;
 }
 
+.shopsInfo{
+  width: 40vw;
+  height: 60vh;
+  position: fixed;
+  z-index: 1;
+  top: 20vh;
+  left: 2vw;
+  border-radius: 5%;
+  background-color: #48b02e;
+  padding: 10px;
+  opacity: 0.8;
+}
+.shopsInfo img{
+  left: 100;
+  width: 30vw;
+  height: 40vh;
+}
+
 @media screen and (max-width:959px) {
   .directionButton{
     width: 10vw;
   }
   .reLocateButton{
-    width: 10vw;
+    width: 20vw;
   }
 }
 
@@ -66,7 +84,7 @@
     height: 3vh;
   }
   .reLocateButton{
-    width: 20vw;
+    width: 25vw;
     height: 3vh;
   }
   .searchBox{

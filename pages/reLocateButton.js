@@ -11,7 +11,7 @@ export default function ReLocateButton({firstCenter,currentLocation,createMap}){
 
     return(
         <>
-            <button onClick={reLocate} className={styles.reLocateButton}>現在地</button>
+            <button onClick={reLocate} className={styles.reLocateButton}>現在地へ</button>
         </>
     );
 }

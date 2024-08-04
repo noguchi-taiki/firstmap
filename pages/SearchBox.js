@@ -1,5 +1,6 @@
 import { useRef, useEffect,useState } from 'react';
 import styles from "../styles/Layout.module.css";
+import Image from 'next/image';
 
 export default function SearchBox({ map,firstCenter,setDestination,currentLocation,createMap}) {
   const inputRef = useRef(null);
@@ -135,7 +136,7 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
           <div>名前: {places.name}</div>
           <div>住所: {places.formatted_address}</div>
           <div>電話番号: {places.formatted_phone_number}</div>
-          {url && <img src={url} alt={places.name} />}
+          {url && <Image src={url} alt="説明" width={500} height={300} />}
         </div>
       )}
     </>

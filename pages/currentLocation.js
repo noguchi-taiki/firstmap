@@ -1,7 +1,11 @@
+"use client";
+import { useEffect } from "react";
 
-export function setCurrentLocationMarker(map, position){
-    //縁の薄い青丸
-    new google.maps.Circle({
+export default function AddCurrentLocationMarker({ map, position }) {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && typeof google !== 'undefined') {
+      // 縁の薄い青丸
+      new google.maps.Circle({
         strokeColor: '#115EC3',
         strokeOpacity: 0.2,
         strokeWeight: 1,
@@ -9,10 +13,10 @@ export function setCurrentLocationMarker(map, position){
         fillOpacity: 0.2,
         map: map,
         center: position,
-        radius: 100
-    });        
-    //  中央の濃い青丸
-    new google.maps.Marker({
+        radius: 100,
+      });
+      // 中央の濃い青丸
+      new google.maps.Marker({
         position: position,
         map: map,
         icon: {
@@ -21,7 +25,11 @@ export function setCurrentLocationMarker(map, position){
           fillOpacity: 1,
           strokeColor: 'white',
           strokeWeight: 2,
-          scale: 7
-        }, 
-    });
+          scale: 7,
+        },
+      });
+    }
+  }, [map, position]);
+
+  return null;
 }

@@ -1,6 +1,8 @@
-import { useRef, useEffect, useState } from 'react';
-import SearchBox from './SearchBox';
-import{ setCurrentLocationMarker } from "./currentLocation";
+"use client";
+
+import { useRef, useEffect, useState } from "react";
+import SearchBox from "./SearchBox";
+import AddCurrentLocationMarker from "./currentLocation";
 import Direction from "./Direction";
 import styles from "../styles/Layout.module.css";
 import ReLocateButton from "./reLocateButton";
@@ -29,13 +31,13 @@ export default function Map() {
       center: center,
     });
     setMap(newMap);
-    setCurrentLocationMarker(newMap,center);
+    setCurrentLocation(center);
   };
-
 
   useEffect(() => {
     if (ref.current && !map) {
-      if (navigator.geolocation) {//Geolocation APIの確認
+      if (navigator.geolocation) { //Geolocation APIの確認
+        //多分これから先も使うことがありそう？
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const location = {
@@ -44,7 +46,6 @@ export default function Map() {
             };
             setFirstCenter(location);
             createMap(location);
-            setCurrentLocation(location);
           },
           () => {
             // Geolocationの取得が失敗した場合
@@ -59,34 +60,35 @@ export default function Map() {
     }
   }, [ref, map, firstCenter]);
 
-useEffect(()=>{
-  if(!showDirections && map && destination){
-    map.setCenter(destination);
-    <Direction mapOptions={mapOptions}/>
-  }
-},[showDirections]);
+  useEffect(() => {
+    if (!showDirections && map && destination) {
+      map.setCenter(destination);
+      // <Direction mapOptions={mapOptions}/> はReactコンポーネントのため、コメントアウト
+    }
+  }, [showDirections, map, destination]);
 
-const handleToggleDirections = () => {
-  if(map && destination){
-    setShowDirections(prevState => !prevState);
+  const handleToggleDirections = () => {
+    if(map && destination){
+      setShowDirections(prevState => !prevState);
+    }
   }
-}
+
   return (
     <div>
       <SearchBox
-      map={map}
-      firstCenter={firstCenter}
-      setDestination={setDestination}
-      createMap={createMap}
+        map={map}
+        firstCenter={firstCenter}
+        setDestination={setDestination}
+        createMap={createMap}
       />
       <button className={styles.directionButton} onClick={handleToggleDirections}>
-        {showDirections?"隠す":"検索"}
+        {showDirections ? "隠す" : "検索"}
       </button>
 
       <ReLocateButton
-      firstCenter={firstCenter}
-      currentLocation={currentLocation}
-      createMap={createMap}
+        firstCenter={firstCenter}
+        currentLocation={currentLocation}
+        createMap={createMap}
       />
 
       {showDirections && destination && (
@@ -100,7 +102,11 @@ const handleToggleDirections = () => {
       )}
       
       <div ref={ref} className={styles.map}/>
-      <div>{showDirections&& distance ?`距離: ${distance}`:""}</div>
+      <div>{showDirections && distance ? `距離: ${distance}` : ""}</div>
+
+      {map && currentLocation && (
+        <AddCurrentLocationMarker map={map} position={currentLocation} />
+      )}
     </div>
   )
 }

@@ -28,7 +28,7 @@
   position: fixed;
   opacity: 0.8;
   width: 20vw;
-  height: 5%;
+  height: 30%;
   z-index: 1;
   top: 13vh;
   left: 5vw;
@@ -36,6 +36,7 @@
   border-width: 0.1px;
   border-color: blue;
   padding: 0px;
+  overflow: auto;
 }
 .nearCafes li{
   background-color: aliceblue;

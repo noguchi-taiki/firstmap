@@ -2,10 +2,10 @@
 
 import { useRef, useEffect, useState } from "react";
 import SearchBox from "./SearchBox";
-import AddCurrentLocationMarker from "./currentLocation";
+import AddCurrentLocationMarker from "./AddCurrentLocation";
 import Direction from "./Direction";
 import styles from "../styles/Layout.module.css";
-import ReLocateButton from "./reLocateButton";
+import ReLocateButton from "./ReLocateButton";
 
 export default function Map() {
   const ref = useRef(null);
@@ -25,10 +25,14 @@ export default function Map() {
     clickableIcons: false,
   };
 
+
+
   const createMap = (center) => {
     const newMap = new google.maps.Map(ref.current,{
+      //今後：カフェのみを表示する様にしたいがmapidを自作で設定すればできそう
       ...mapOptions,
       center: center,
+      // mapId:,
     });
     setMap(newMap);
     setCurrentLocation(center);
@@ -37,7 +41,7 @@ export default function Map() {
   useEffect(() => {
     if (ref.current && !map) {
       if (navigator.geolocation) { //Geolocation APIの確認
-        //多分これから先も使うことがありそう？
+        //多分これから先も使うことがあると思う
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const location = {
@@ -48,13 +52,11 @@ export default function Map() {
             createMap(location);
           },
           () => {
-            // Geolocationの取得が失敗した場合
             createMap(firstCenter);
           }
         );
       } else {
         console.warn("このブラウザではGeolocation APIが利用できません。");
-        // Geolocation APIがサポートされていない場合
         createMap(firstCenter);
       }
     }
@@ -63,7 +65,6 @@ export default function Map() {
   useEffect(() => {
     if (!showDirections && map && destination) {
       map.setCenter(destination);
-      // <Direction mapOptions={mapOptions}/> はReactコンポーネントのため、コメントアウト
     }
   }, [showDirections, map, destination]);
 
@@ -82,7 +83,7 @@ export default function Map() {
         createMap={createMap}
       />
       <button className={styles.directionButton} onClick={handleToggleDirections}>
-        {showDirections ? "隠す" : "検索"}
+        {showDirections ? "隠す" : "距離"}
       </button>
 
       <ReLocateButton
@@ -105,7 +106,10 @@ export default function Map() {
       <div>{showDirections && distance ? `距離: ${distance}` : ""}</div>
 
       {map && currentLocation && (
-        <AddCurrentLocationMarker map={map} position={currentLocation} />
+        <>
+        <AddCurrentLocationMarker map={map} position={currentLocation}/>
+        <showCafes map={map} position={currentLocation}/>
+        </>
       )}
     </div>
   )

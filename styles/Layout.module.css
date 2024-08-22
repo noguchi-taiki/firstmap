@@ -24,6 +24,25 @@
   padding: 0px;
 }
 
+.nearCafes{
+  position: fixed;
+  opacity: 0.8;
+  width: 20vw;
+  height: 5%;
+  z-index: 1;
+  top: 13vh;
+  left: 5vw;
+  border-radius: 4%;
+  border-width: 0.1px;
+  border-color: blue;
+  padding: 0px;
+}
+.nearCafes li{
+  background-color: aliceblue;
+  list-style: none;
+  border-bottom:1px solid blue;
+}
+
 .directionButton{
   position: fixed;
   opacity: 0.8;

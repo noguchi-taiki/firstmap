@@ -1,6 +1,7 @@
 import { useRef, useEffect,useState } from 'react';
 import styles from "../styles/Layout.module.css";
 import Image from 'next/image';
+// import markerImg from "../public/mugcup_tabaco.png";
 
 export default function SearchBox({ map,firstCenter,setDestination,currentLocation,createMap}) {
   const inputRef = useRef(null);
@@ -10,6 +11,8 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
   const [places,setPlaces] = useState({});
   const [toggle,setToggle] = useState(false);
   const [markerPositions, setMarkerPositions] = useState([]); // マーカーの位置を保存するstate
+  const [showCafeToggle,setShowCafeToggle] = useState(false);
+
 
   useEffect(() => {
     if (map != null && inputRef.current) {
@@ -60,10 +63,13 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
             return;
           }
 
-          // マーカーを作成して地図上に表示する。(Maekerメソッド) 
+          // マーカーを作成して地図上に表示する。(Maekerメソッド) markerメソッドは後で色々工夫したいから
+          //ドキュメントを読む必要あり。。。一度試してみたが苦戦しそうな模様なので一旦はデフォで
           const marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location,
+            // url: markerImg.src,
+            // scaledSize: new google.maps.Size(50, 50),
           });
 
           markers.current.push(marker);
@@ -82,12 +88,12 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
           }
 
           const markerPosition = marker.getPosition();
-          // if (markerPosition) {
-          //   setMarkerPositions(prevPositions => [
-          //     ...prevPositions,
-          //     { lat: markerPosition.lat(), lng: markerPosition.lng() }
-          //   ]);
-          // }
+          if (markerPosition) {
+            setMarkerPositions(prevPositions => [
+              ...prevPositions,
+              { lat: markerPosition.lat(), lng: markerPosition.lng() }
+            ]);
+          }
 
           if (place.geometry.viewport) {
             bounds.union(place.geometry.viewport);
@@ -102,7 +108,7 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
 
       input.addEventListener('input', () => {
         const inputText = input.value;
-        input.placeholder = 'ex:近くのカフェ';
+        input.placeholder = 'カフェを検索';
         
         if (inputText) {
           const searchQuery = inputText.includes('カフェ') ? inputText : inputText + ' カフェ'; // キーワードに「カフェ」が含まれていなければ追加
@@ -119,18 +125,36 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
     }
   }, [map,setDestination]);
 
+const showNearCafes = () => {
+  // showCafeToggle = toggle(showCafeToggle);一旦できないのでステート、おそらく文字列型で元要素を渡す関数
+  if(showCafeToggle==false){setShowCafeToggle(true);}else{setShowCafeToggle(false);}
+}
+useEffect(()=>{
+  //ここにてlaravelにてデータをfirstCenter(latlng(現在地))を参考にデータをフェッチしてくる
+},[firstCenter])
+
 
   useEffect(()=>{
-    console.log(places);
-    console.log(places.name);
-    console.log(places.formatted_address);
-    console.log(places.formatted_phone_number);
+    // console.log(places);
+    // console.log(places.name);
+    // console.log(places.formatted_address);
+    // console.log(places.formatted_phone_number);
     if(url){
       console.log(url);
     }
   },[places])
   return(<>
-    <input className={styles.searchBox} ref={inputRef} type="text" placeholder="ex:近くのカフェ"/>
+    <input onClick={showNearCafes} onBlur={showNearCafes} className={styles.searchBox} ref={inputRef} type="text" placeholder="現在地から近い順"/>
+    
+      {showCafeToggle &&(
+        <ul className={styles.nearCafes}>
+          <li>hoge</li>
+          <li>fuga</li>
+          <li>piyo</li>
+          <li>hogera</li>
+          <li>hogehoge</li>
+        </ul>
+      )}
     {toggle && (
         <div className={styles.shopsInfo}>
           <div>名前: {places.name}</div>

@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import { useEffect } from "react";
 
 export default function AddCurrentLocationMarker({ map, position }) {
@@ -6,10 +6,10 @@ export default function AddCurrentLocationMarker({ map, position }) {
     if (typeof window !== 'undefined' && typeof google !== 'undefined') {
       // 縁の薄い青丸
       new google.maps.Circle({
-        strokeColor: '#115EC3',
+        strokeColor: '#deb9a0',
         strokeOpacity: 0.2,
         strokeWeight: 1,
-        fillColor: '#115EC3',
+        fillColor: '#deb9a0',
         fillOpacity: 0.2,
         map: map,
         center: position,
@@ -21,10 +21,12 @@ export default function AddCurrentLocationMarker({ map, position }) {
         map: map,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          fillColor: '#115EC3',
+          fillColor: '#fa802f',
           fillOpacity: 1,
-          strokeColor: 'white',
-          strokeWeight: 2,
+          fillWeight: 3,
+          // strokeColor: '#dbcbc5',
+          strokeColor: '#f7f4f2',
+          strokeWeight: 1,
           scale: 7,
         },
       });

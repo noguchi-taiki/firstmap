@@ -1,7 +1,7 @@
-"use cliant"//wrapperだけでは勝手にCSRになってくれないらしいからビルド時にエラーが発生するっぽい。（Next.js13はデフォルトがgaSSR）
+"use cliant"//wrapperだけでは勝手にCSRになってくれないらしいからビルド時にエラーが発生する（Next.js13はデフォルトがSSR）
 
 import { Wrapper } from "@googlemaps/react-wrapper";
-import Map from "./map";
+import Map from "./Map";
 import styles from "../styles/Layout.module.css";
 
 const Main = () => {

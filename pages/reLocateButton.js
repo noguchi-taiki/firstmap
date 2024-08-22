@@ -2,8 +2,9 @@ import styles from "../styles/Layout.module.css"
 export default function ReLocateButton({firstCenter,currentLocation,createMap}){
 
     const reLocate = () => {
-        if(currentLocation!=null){
+        if(currentLocation){
             createMap(currentLocation);
+            console.log(currentLocation);
         } else {
             createMap(firstCenter);
         }

@@ -10,6 +10,10 @@
   opacity: 0.9;
 }
 
+.api{
+  position: fixed;
+  z-index: 1;
+}
 .searchBox{
   position: fixed;
   opacity: 0.8;
@@ -89,7 +93,7 @@
   height: 40vh;
 }
 
-@media screen and (max-width:959px) {
+@media screen and (max-width:960px) {
   .directionButton{
     width: 10vw;
   }

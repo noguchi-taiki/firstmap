@@ -4,8 +4,11 @@ import { useRef, useEffect, useState } from "react";
 import SearchBox from "./SearchBox";
 import AddCurrentLocationMarker from "./AddCurrentLocation";
 import Direction from "./Direction";
+// import ShowCafes from "./ShowCafes";
 import styles from "../styles/Layout.module.css";
 import ReLocateButton from "./ReLocateButton";
+import App from "./api";
+
 
 export default function Map() {
   const ref = useRef(null);
@@ -76,6 +79,8 @@ export default function Map() {
 
   return (
     <div>
+      <App/>
+
       <SearchBox
         map={map}
         firstCenter={firstCenter}
@@ -108,7 +113,7 @@ export default function Map() {
       {map && currentLocation && (
         <>
         <AddCurrentLocationMarker map={map} position={currentLocation}/>
-        <showCafes map={map} position={currentLocation}/>
+        {/* <ShowCafes map={map} position={currentLocation}/> */}
         </>
       )}
     </div>

@@ -107,7 +107,8 @@
 .logo {
   position: relative;
 }
-/* Enable hover only on non-touch devices */
+
+/*タブレット*/
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
     background: rgba(var(--card-rgb), 0.1);
@@ -125,7 +126,7 @@
   }
 }
 
-/* Mobile */
+/* スマホ */
 @media (max-width: 700px) {
   .content {
     padding: 4rem;

@@ -9,7 +9,6 @@ export default function ReLocateButton({firstCenter,currentLocation,createMap}){
             createMap(firstCenter);
         }
     }
-
     return(
         <>
             <button onClick={reLocate} className={styles.reLocateButton}>現在地へ</button>

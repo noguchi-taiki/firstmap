@@ -126,11 +126,13 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
   }, [map,setDestination]);
 
 const showNearCafes = () => {
-  // showCafeToggle = toggle(showCafeToggle);一旦できないのでステート、おそらく文字列型で元要素を渡す関数
   if(showCafeToggle==false){setShowCafeToggle(true);}else{setShowCafeToggle(false);}
 }
+const hydeNearCafes = () => {
+  setShowCafeToggle(false);
+}
 useEffect(()=>{
-  //ここにてlaravelにてデータをfirstCenter(latlng(現在地))を参考にデータをフェッチしてくる
+  //ここでlaravelにてデータをfirstCenter(latlng(現在地))を参考にデータをフェッチしてくる
 },[firstCenter])
 
 
@@ -140,11 +142,11 @@ useEffect(()=>{
     // console.log(places.formatted_address);
     // console.log(places.formatted_phone_number);
     if(url){
-      console.log(url);
+      // console.log(url);
     }
   },[places])
   return(<>
-    <input onClick={showNearCafes} onBlur={showNearCafes} className={styles.searchBox} ref={inputRef} type="text" placeholder="現在地から近い順"/>
+    <input onClick={showNearCafes} onBlur={hydeNearCafes} className={styles.searchBox} ref={inputRef} type="text" placeholder="現在地から近い順"/>
     
       {showCafeToggle &&(
         <ul className={styles.nearCafes}>

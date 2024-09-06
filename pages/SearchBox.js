@@ -1,6 +1,7 @@
 import { useRef, useEffect,useState } from 'react';
 import styles from "../styles/Layout.module.css";
 import Image from 'next/image';
+import App from './api';
 // import markerImg from "../public/mugcup_tabaco.png";
 
 export default function SearchBox({ map,firstCenter,setDestination,currentLocation,createMap}) {
@@ -131,9 +132,6 @@ const showNearCafes = () => {
 const hydeNearCafes = () => {
   setShowCafeToggle(false);
 }
-useEffect(()=>{
-  //ここでlaravelにてデータをfirstCenter(latlng(現在地))を参考にデータをフェッチしてくる
-},[firstCenter])
 
 
   useEffect(()=>{
@@ -149,23 +147,7 @@ useEffect(()=>{
     <input onClick={showNearCafes} onBlur={hydeNearCafes} className={styles.searchBox} ref={inputRef} type="text" placeholder="現在地から近い順"/>
     
       {showCafeToggle &&(
-        <ul className={styles.nearCafes}>
-          <li>hoge</li>
-          <li>fuga</li>
-          <li>piyo</li>
-          <li>hogera</li>
-          <li>hogehoge</li>
-          <li>fugafuga</li>
-          <li>piyopiyo</li>
-          <li>hogerahogera</li>
-          <li>hogehogehoge</li>
-          <li>fugafugafuga</li>
-          <li>hoge</li>
-          <li>fuga</li>
-          <li>piyo</li>
-          <li>hogera</li>
-          <li>hogehoge</li>
-        </ul>
+        <App/>
       )}
     {toggle && (
         <div className={styles.shopsInfo}>

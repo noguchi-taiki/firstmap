@@ -79,7 +79,9 @@ export default function Map() {
 
   return (
     <div>
-      <App/>
+      <App
+        firstCenter={firstCenter}
+      />
 
       <SearchBox
         map={map}

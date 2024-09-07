@@ -147,7 +147,10 @@ const hydeNearCafes = () => {
     <input onClick={showNearCafes} onBlur={hydeNearCafes} className={styles.searchBox} ref={inputRef} type="text" placeholder="現在地から近い順"/>
     
       {showCafeToggle &&(
-        <App/>
+        <App
+        showCafeToggle={showCafeToggle}
+        firstCenter={firstCenter}
+        />
       )}
     {toggle && (
         <div className={styles.shopsInfo}>

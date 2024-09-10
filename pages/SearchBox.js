@@ -7,44 +7,34 @@ import App from './api';
 export default function SearchBox({ map,firstCenter,setDestination,currentLocation,createMap}) {
   const inputRef = useRef(null);
   const markers = useRef([]); //マーカーを使う際のref定義
-  const index = useRef([]);
   const [url, setUrl] = useState("");
   const [places,setPlaces] = useState({});
-  const [toggle,setToggle] = useState(false);
+  const [infoToggle,setInfoToggle] = useState(false);
   const [markerPositions, setMarkerPositions] = useState([]); // マーカーの位置を保存するstate
   const [showCafeToggle,setShowCafeToggle] = useState(false);
 
 
   useEffect(() => {
     if (map != null && inputRef.current) {
-      const autocompleteService = new google.maps.places.AutocompleteService();
       const input = inputRef.current;
-      
       const searchBox = new google.maps.places.SearchBox(input, {
-        types: ['cafe'], //カフェのみを検索する
-        componentRestrictions: { country: 'jp' } // 日本国内に制限
+        types: ['cafe'],
+        componentRestrictions: { country: 'jp' }
       });
+      const autocompleteService = new google.maps.places.AutocompleteService();
 
-      map.addListener('bounds_changed', () => {
-        searchBox.setBounds(map.getBounds());
-      });
+      // map.addListener('bounds_changed', () => {
+      //   searchBox.setBounds(map.getBounds());
+      // });
+      //サーチボックスのsetBoundsメソッドを使いブラウザの表示範囲のみを検索してくれる。
+      //chatgptによると付けたほうがいいらしいが今回はつけない方が良い
 
       searchBox.addListener('places_changed', () => {
         const places = searchBox.getPlaces();
-
-        if (places.length === 0) {
-          return;
-        }
-
         //再検索の際にマーカーを消す
         markers.current.forEach(marker => marker.setMap(null));
         markers.current = [];
-        setToggle(false);
-
-
-        // if(toggle && !places[0]){
-        //   setToggle(prevToggle => !prevToggle);
-        // }
+        setInfoToggle(false);
 
         const bounds = new google.maps.LatLngBounds();
         places.forEach((place) => {
@@ -69,20 +59,21 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
           const marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location,
-            // url: markerImg.src,
             // scaledSize: new google.maps.Size(50, 50),
           });
 
           markers.current.push(marker);
-
           
           if(places.length = 1){
             google.maps.event.addListener(marker,"click",()=>{
-              setToggle(prevToggle => !prevToggle);
-              if(!toggle){
+              setInfoToggle(prevToggle => !prevToggle);
+              if(!infoToggle){
                 setPlaces(places[0]);
                 if (place.photos && place.photos.length > 0) {
                   setUrl(place.photos[0].getUrl({ maxWidth: 400, maxHeight: 300 }));
+                  console.log(places.formatted_address)
+                } else {
+                  setUrl("画像が見つかりませんでした。")
                 }
               }
             })
@@ -127,24 +118,15 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
   }, [map,setDestination]);
 
 const showNearCafes = () => {
-  if(showCafeToggle==false){setShowCafeToggle(true);}else{setShowCafeToggle(false);}
+  setShowCafeToggle(!showCafeToggle);
 }
-const hydeNearCafes = () => {
+const hydes = () => {
   setShowCafeToggle(false);
+  setInfoToggle(false);
 }
 
-
-  useEffect(()=>{
-    // console.log(places);
-    // console.log(places.name);
-    // console.log(places.formatted_address);
-    // console.log(places.formatted_phone_number);
-    if(url){
-      // console.log(url);
-    }
-  },[places])
   return(<>
-    <input onClick={showNearCafes} onBlur={hydeNearCafes} className={styles.searchBox} ref={inputRef} type="text" placeholder="現在地から近い順"/>
+    <input onClick={showNearCafes} onBlur={hydes} className={styles.searchBox} ref={inputRef} type="text" placeholder="ここから近い順！"/>
     
       {showCafeToggle &&(
         <App
@@ -152,12 +134,14 @@ const hydeNearCafes = () => {
         firstCenter={firstCenter}
         />
       )}
-    {toggle && (
+    {infoToggle && (
         <div className={styles.shopsInfo}>
-          <div>名前: {places.name}</div>
-          <div>住所: {places.formatted_address}</div>
-          <div>電話番号: {places.formatted_phone_number}</div>
-          {url && <Image src={url} alt="説明" width={500} height={300} />}
+          <div>name: {places.name}</div>
+          <address>addres: {places.formatted_address}</address>
+          <div className={styles.cafeInfoTell}>Tell: {places.formatted_phone_number}</div>
+          <div>
+            <Image src={url} alt="説明" width={500} height={300}/>
+          </div>
         </div>
       )}
     </>

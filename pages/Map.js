@@ -12,12 +12,13 @@ import App from "./api";
 
 export default function Map() {
   const ref = useRef(null);
-  const [firstCenter, setFirstCenter] = useState({ lat: 35.6809591, lng: 139.7673068 });
   const [destination, setDestination] = useState(null);
   const [distance,setDistance] = useState(null);
   const [showDirections,setShowDirections] = useState(false);
   const [map, setMap] = useState(null);
+  const firstCenter  = { lat: 35.6809591, lng: 139.7673068 };
   const [currentLocation,setCurrentLocation] = useState(null);
+  
   const mapOptions = {
     zoom: 15,
     mapTypeControl: false,
@@ -38,7 +39,8 @@ export default function Map() {
       // mapId:,
     });
     setMap(newMap);
-    setCurrentLocation(center);
+    // console.log(currentLocation);
+    // console.log(firstCenter);
   };
 
   useEffect(() => {
@@ -51,11 +53,9 @@ export default function Map() {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            setFirstCenter(location);
+            setCurrentLocation(location);
+            console.log(location);
             createMap(location);
-          },
-          () => {
-            createMap(firstCenter);
           }
         );
       } else {
@@ -63,13 +63,25 @@ export default function Map() {
         createMap(firstCenter);
       }
     }
-  }, [ref, map, firstCenter]);
+  }, []);
+
 
   useEffect(() => {
-    if (!showDirections && map && destination) {
-      map.setCenter(destination);
+    if (currentLocation) {
+      console.log("currentLocationが更新されました:", currentLocation);
     }
-  }, [showDirections, map, destination]);
+  }, [currentLocation]);
+
+
+  // useEffect(() => {
+  //   if (!showDirections && map && destination) {
+  //     if (destination.lat && destination.lng) {
+  //       map.setCenter(destination);
+  //     } else {
+  //       console.error("無効な目的地の座標が設定されています:", destination);
+  //     }
+  //   }
+  // }, [showDirections, map, destination]);
 
   const handleToggleDirections = () => {
     if(map && destination){
@@ -86,7 +98,7 @@ export default function Map() {
       <SearchBox
         map={map}
         firstCenter={firstCenter}
-        setDestination={setDestination}
+        currentLocation={currentLocation}
         createMap={createMap}
       />
       <button className={styles.directionButton} onClick={handleToggleDirections}>
@@ -99,7 +111,7 @@ export default function Map() {
         createMap={createMap}
       />
 
-      {showDirections && destination && (
+      {showDirections &&(
         <Direction
           map={map}
           origin={firstCenter}
@@ -113,10 +125,7 @@ export default function Map() {
       <div>{showDirections && distance ? `距離: ${distance}` : ""}</div>
 
       {map && currentLocation && (
-        <>
         <AddCurrentLocationMarker map={map} position={currentLocation}/>
-        {/* <ShowCafes map={map} position={currentLocation}/> */}
-        </>
       )}
     </div>
   )

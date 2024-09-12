@@ -47,6 +47,7 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
             input.value = '';
             if(currentLocation!=null){
                 createMap(currentLocation);
+                // map.setCenter(currentLocation);本来はこの書き方をしたい...
             } else {
                 createMap(firstCenter);
             }
@@ -92,7 +93,7 @@ export default function SearchBox({ map,firstCenter,setDestination,currentLocati
           } else {
             bounds.extend(place.geometry.location);
           }
-          setDestination(place.geometry.location); // 目的地を設定
+          // setDestination(place.geometry.location); // 目的地を設定
         });
 
         map.fitBounds(bounds);

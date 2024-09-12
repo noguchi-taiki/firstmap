@@ -4,9 +4,8 @@ export default function ReLocateButton({firstCenter,currentLocation,createMap}){
     const reLocate = () => {
         if(currentLocation){
             createMap(currentLocation);
-            console.log(currentLocation);
         } else {
-            createMap(firstCenter);
+            createMap(firstCenter)
         }
     }
     return(
